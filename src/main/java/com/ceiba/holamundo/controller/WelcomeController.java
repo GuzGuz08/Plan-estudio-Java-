@@ -27,6 +27,7 @@ public class WelcomeController {
     public Map<String, String> welcome(@PathVariable String nombre) {
         Map<String, String> respuesta = new HashMap<>();
         respuesta.put("message", "¡Hola " + nombre + "! Bienvenido a la API");
+        respuesta.put("nombre", nombre);
         
         return respuesta;
     }
