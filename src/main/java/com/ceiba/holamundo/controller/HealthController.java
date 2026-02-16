@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class HealthController {
     /**
      * Endpoint: GET http://localhost:8080/api/health
      * 
-     * Retorna: {"status": "OK", "message": "API funcionando"}
+     * Retorna: {"status": "OK", "message": "API funcionando", "timestamp": "..."}
      * 
      * @GetMapping = este método responde cuando alguien hace GET a /api/health
      */
@@ -30,6 +31,7 @@ public class HealthController {
         Map<String, String> respuesta = new HashMap<>();
         respuesta.put("status", "OK");
         respuesta.put("message", "API funcionando");
+        respuesta.put("timestamp", LocalDateTime.now().toString());
         
         // Spring convierte automáticamente este Map a JSON
         return respuesta;
