@@ -1,4 +1,5 @@
-package domain;
+package infrastructure.persistence;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -10,13 +11,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import dto.PersonaDTO;
+
+import domain.model.Persona;
 
 @Entity
 @Table(name = "persona")
 @EntityListeners(AuditingEntityListener.class)
-public class Persona {
-    private static final String ACTUALIZADO = " actualizado";
+public class PersonaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,14 +39,32 @@ public class Persona {
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
-    public Persona() {
+    public PersonaEntity() {
     }
 
-    public Persona(String nombre, String apellido, String email, LocalDate fechaNacimiento) {
+    public PersonaEntity(String nombre, String apellido, String email, LocalDate fechaNacimiento) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public static PersonaEntity fromDomain(Persona persona) {
+        PersonaEntity entity = new PersonaEntity(
+                persona.getNombre(),
+                persona.getApellido(),
+                persona.getEmail(),
+                persona.getFechaNacimiento()
+        );
+        entity.id = persona.getId();
+        return entity;
+    }
+
+    public Persona toDomain() {
+        Persona persona = new Persona(nombre, apellido, email, fechaNacimiento);
+        persona.setId(id);
+        persona.setFechaCreacion(fechaCreacion);
+        return persona;
     }
 
     public Long getId() {
@@ -61,7 +80,7 @@ public class Persona {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre +  ACTUALIZADO;
+        this.nombre = nombre;
     }
 
     public String getApellido() {
@@ -87,15 +106,8 @@ public class Persona {
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
- 
+
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
-    }
-
-    public void actualizarDesdeDTO(PersonaDTO personaDTO) {
-        setNombre(personaDTO.nombre);
-        setApellido(personaDTO.apellido);
-        setEmail(personaDTO.email);
-        setFechaNacimiento(personaDTO.fechaNacimiento);
     }
 }

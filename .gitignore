@@ -19,3 +19,14 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Método Ceiba - Auto-managed agent files
+.github/agents/metodo-ceiba-*.agent.md
+# Método Ceiba - Auto-managed kanban prompts
+.github/prompts/ceiba-*.prompt.md
+
+# Método Ceiba - Auto-injected agent skills
+.github/skills/
+
+.ceiba-metodo
+.claude

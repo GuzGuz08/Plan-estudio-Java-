@@ -7,4 +7,3 @@ CREATE TABLE IF NOT EXISTS persona (
     fecha_nacimiento DATE       NOT NULL,
     fecha_creacion TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
 );
- 
