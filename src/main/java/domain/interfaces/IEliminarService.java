@@ -1,4 +1,4 @@
-package application.port.in;
+package domain.interfaces;
 
 public interface IEliminarService {
     void eliminar(Long id);

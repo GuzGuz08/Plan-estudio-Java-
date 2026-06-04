@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 
 public class Persona {
 
-    private Long id;
-    private String nombre;
-    private String apellido;
-    private String email;
-    private LocalDate fechaNacimiento;
+    public Long id;
+    public String nombre;
+    public String apellido;
+    public String email;
+    public LocalDate fechaNacimiento;
     private LocalDateTime fechaCreacion;
 
     public Persona() {

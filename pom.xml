@@ -64,11 +64,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- H2 en memoria para tests de integración -->
+        <!-- H2 en memoria para desarrollo local (sin PostgreSQL) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

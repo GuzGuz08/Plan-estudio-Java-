@@ -2,20 +2,19 @@ package domain.service;
 
 import application.dto.PersonaDTO;
 import application.dto.PersonaPageDTO;
-import application.port.in.IBuscarAvanzadoService;
-import application.service.ConvertirService;
+import domain.interfaces.IBuscarAvanzadoService;
 import infrastructure.persistence.PersonaEntity;
-import infrastructure.persistence.PersonaJpaRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +22,10 @@ import java.util.List;
 @Service
 public class BuscarAvanzadoService implements IBuscarAvanzadoService {
 
-    private final ConvertirService convertirService;
     private final EntityManager entityManager;
 
-    public BuscarAvanzadoService(PersonaJpaRepository personaJpaRepository,
-                                 ConvertirService convertirService,
-                                 EntityManager entityManager) {
-        this.convertirService = convertirService;
+    @Autowired
+    public BuscarAvanzadoService(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -37,8 +33,8 @@ public class BuscarAvanzadoService implements IBuscarAvanzadoService {
     public PersonaPageDTO buscar(String nombre, String apellido, Integer edadMin, Integer edadMax,
                                  int page, int size, String sort) {
 
-        LocalDate fechaMax = (edadMin == null) ? null : LocalDate.now().minusYears(edadMin);
-        LocalDate fechaMin = (edadMax == null) ? null : LocalDate.now().minusYears(edadMax).minusYears(1).plusDays(1);
+        LocalDate fechaMin = calcularFechaMin(edadMax);
+        LocalDate fechaMax = calcularFechaMax(edadMin);
 
         Pageable pageable = crearPageable(page, size, sort);
 
@@ -47,12 +43,20 @@ public class BuscarAvanzadoService implements IBuscarAvanzadoService {
 
         List<PersonaDTO> dtos = resultados.stream()
                 .map(PersonaEntity::toDomain)
-                .map(convertirService::convertirADTO)
+                .map(PersonaDTO::desdeModelo)
                 .toList();
 
-        int totalPages = (int) Math.ceil((double) total / size);
+        int totalPages = (size > 0) ? (int) Math.ceil((double) total / size) : 0;
 
         return new PersonaPageDTO(dtos, total, totalPages, page, size);
+    }
+
+    private LocalDate calcularFechaMin(Integer edadMax) {
+        return (edadMax == null) ? null : LocalDate.now().minusYears(edadMax);
+    }
+
+    private LocalDate calcularFechaMax(Integer edadMin) {
+        return (edadMin == null) ? null : LocalDate.now().minusYears(edadMin);
     }
 
     private List<PersonaEntity> buscarConCriteria(String nombre, String apellido,
@@ -73,7 +77,6 @@ public class BuscarAvanzadoService implements IBuscarAvanzadoService {
         if (fechaMin != null) {
             predicates.add(cb.greaterThanOrEqualTo(root.get("fechaNacimiento"), fechaMin));
         }
-
         if (fechaMax != null) {
             predicates.add(cb.lessThanOrEqualTo(root.get("fechaNacimiento"), fechaMax));
         }
@@ -89,7 +92,6 @@ public class BuscarAvanzadoService implements IBuscarAvanzadoService {
             cq.orderBy(cb.asc(root.get("apellido")));
         }
 
-        // Aplicar paginación
         return entityManager.createQuery(cq)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
@@ -107,15 +109,12 @@ public class BuscarAvanzadoService implements IBuscarAvanzadoService {
         if (nombre != null && !nombre.isBlank()) {
             predicates.add(cb.like(cb.lower(root.get("nombre")), "%" + nombre.toLowerCase() + "%"));
         }
-
         if (apellido != null && !apellido.isBlank()) {
             predicates.add(cb.like(cb.lower(root.get("apellido")), "%" + apellido.toLowerCase() + "%"));
         }
-
         if (fechaMin != null) {
             predicates.add(cb.greaterThanOrEqualTo(root.get("fechaNacimiento"), fechaMin));
         }
-
         if (fechaMax != null) {
             predicates.add(cb.lessThanOrEqualTo(root.get("fechaNacimiento"), fechaMax));
         }

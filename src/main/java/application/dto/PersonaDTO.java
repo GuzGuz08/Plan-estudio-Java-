@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import domain.model.Persona;
 
 public class PersonaDTO {
 
@@ -27,6 +28,9 @@ public class PersonaDTO {
     @NotNull(message = "La fecha de nacimiento es obligatoria")
     @Past(message = "La fecha de nacimiento no puede ser futura")
     public LocalDate fechaNacimiento;
+    
+    public PersonaDTO() {
+    }
 
     public PersonaDTO(Long id, String nombre, String apellido, String email, LocalDate fechaNacimiento) {
         this.id = id;
@@ -35,4 +39,25 @@ public class PersonaDTO {
         this.email = email;
         this.fechaNacimiento = fechaNacimiento;
     }
+
+    public Persona aModelo() {
+        return new Persona(
+                this.nombre,
+                this.apellido,
+                this.email,
+                this.fechaNacimiento
+        );
+    }
+
+    public static PersonaDTO desdeModelo(Persona persona) {
+        return new PersonaDTO(
+                persona.id,
+                persona.nombre,
+                persona.apellido,
+                persona.email,
+                persona.fechaNacimiento
+        );
+    }
+
+
 }

@@ -1,8 +1,6 @@
 package service;
 
-import application.dto.PersonaDTO;
 import application.port.out.PersonaRepositoryPort;
-import application.service.ConvertirService;
 import domain.model.Persona;
 import domain.service.ListarService;
 
@@ -25,9 +23,6 @@ class ListarServiceTest {
     @Mock
     PersonaRepositoryPort personaRepository;
 
-    @Mock
-    ConvertirService convertirService;
-
     @InjectMocks
     ListarService listarService;
 
@@ -41,14 +36,12 @@ class ListarServiceTest {
         );
 
         when(personaRepository.findAllByOrderByApellidoAsc()).thenReturn(personas);
-        when(convertirService.convertirADTO(personas.get(0))).thenReturn(new PersonaDTO(1L, "Ana", "García", "ana@test.com", FECHA_NACIMIENTO));
-        when(convertirService.convertirADTO(personas.get(1))).thenReturn(new PersonaDTO(2L, "Carlos", "López", "carlos@test.com", FECHA_NACIMIENTO));
 
-        List<PersonaDTO> resultado = listarService.listarPersonas();
+        List<Persona> resultado = listarService.listarPersonas();
 
         assertEquals(2, resultado.size());
-        assertEquals("Ana", resultado.get(0).nombre);
-        assertEquals("Carlos", resultado.get(1).nombre);
+        assertEquals("Ana", resultado.get(0).getNombre());
+        assertEquals("Carlos", resultado.get(1).getNombre());
         verify(personaRepository).findAllByOrderByApellidoAsc();
     }
 
@@ -56,7 +49,7 @@ class ListarServiceTest {
     void should_ReturnEmptyList_When_NoPersonasExist() {
         when(personaRepository.findAllByOrderByApellidoAsc()).thenReturn(List.of());
 
-        List<PersonaDTO> resultado = listarService.listarPersonas();
+        List<Persona> resultado = listarService.listarPersonas();
 
         assertTrue(resultado.isEmpty());
         verify(personaRepository).findAllByOrderByApellidoAsc();

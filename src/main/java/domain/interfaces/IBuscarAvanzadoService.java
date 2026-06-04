@@ -1,4 +1,4 @@
-package application.port.in;
+package domain.interfaces;
 
 import application.dto.PersonaPageDTO;
 

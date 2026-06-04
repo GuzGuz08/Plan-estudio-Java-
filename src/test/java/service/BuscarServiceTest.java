@@ -1,8 +1,6 @@
 package service;
 
-import application.dto.PersonaDTO;
 import application.port.out.PersonaRepositoryPort;
-import application.service.ConvertirService;
 import domain.exception.PersonaNoEncontradaException;
 import domain.model.Persona;
 import domain.service.BuscarService;
@@ -24,9 +22,6 @@ class BuscarServiceTest {
 
     @Mock
     PersonaRepositoryPort personaRepository;
-
-    @Mock
-    ConvertirService convertirService;
 
     @InjectMocks
     BuscarService buscarService;
@@ -59,18 +54,17 @@ class BuscarServiceTest {
     }
 
     @Test
-    void should_ReturnPersonaDTO_When_IdExists() {
+    void should_ReturnPersona_When_BuscarPorIdExists() {
         Persona persona = crearPersona(1L, "Juan", "Pérez", "juan@test.com");
 
         when(personaRepository.findById(1L)).thenReturn(Optional.of(persona));
-        when(convertirService.convertirADTO(persona)).thenReturn(new PersonaDTO(1L, "Juan", "Pérez", "juan@test.com", FECHA_NACIMIENTO));
 
-        PersonaDTO resultado = buscarService.buscarPorId(1L);
+        Persona resultado = buscarService.buscarPorId(1L);
 
         assertNotNull(resultado);
-        assertEquals(1L, resultado.id);
-        assertEquals("Juan", resultado.nombre);
-        assertEquals("juan@test.com", resultado.email);
+        assertEquals(1L, resultado.getId());
+        assertEquals("Juan", resultado.getNombre());
+        assertEquals("juan@test.com", resultado.getEmail());
         verify(personaRepository).findById(1L);
     }
 

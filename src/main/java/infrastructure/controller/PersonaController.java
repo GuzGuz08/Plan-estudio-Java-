@@ -15,44 +15,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import application.dto.PersonaDTO;
 import application.dto.PersonaPageDTO;
-import application.port.in.IActualizarService;
-import application.port.in.IBuscarAvanzadoService;
-import application.port.in.IBuscarService;
-import application.port.in.IEliminarService;
-import application.port.in.IListarService;
-import application.port.in.IRegistrarService;
+import application.interfaces.IActualizarServiceApp;
+import application.interfaces.IBuscarServiceApp;
+import application.interfaces.IEliminarServiceApp;
+import application.interfaces.IGuardarServiceApp;
+import application.interfaces.IListarServiceApp;
+import application.interfaces.IBuscadorAvanzadoServiceApp;
+
 
 @RestController
 @RequestMapping("/api/personas")
 public class PersonaController {
 
-    private final IRegistrarService registrarService;
-    private final IActualizarService actualizarService;
-    private final IEliminarService eliminarService;
-    private final IListarService listarService;
-    private final IBuscarService buscarService;
-    private final IBuscarAvanzadoService buscarAvanzadoService;
+    // private final IRegistrarService registrarService;
+    private final IActualizarServiceApp actualizarService;
+    private final IEliminarServiceApp eliminarService;
+    private final IListarServiceApp listarService;
+    private final IBuscarServiceApp buscarService;
+    private final IGuardarServiceApp guardarServiceApp;
+    private final IBuscadorAvanzadoServiceApp buscarAvanzadoService;
 
-    public PersonaController(IRegistrarService registrarService, IActualizarService actualizarService,
-                             IEliminarService eliminarService, IListarService listarService,
-                             IBuscarService buscarService, IBuscarAvanzadoService buscarAvanzadoService) {
-        this.registrarService = registrarService;
+    public PersonaController(IActualizarServiceApp actualizarService,
+                             IEliminarServiceApp eliminarService, IListarServiceApp listarService,
+                             IBuscarServiceApp buscarService, IGuardarServiceApp guardarServiceapp,
+                             IBuscadorAvanzadoServiceApp buscarAvanzadoService) {
         this.actualizarService = actualizarService;
         this.eliminarService = eliminarService;
         this.listarService = listarService;
         this.buscarService = buscarService;
+        this.guardarServiceApp = guardarServiceapp;
         this.buscarAvanzadoService = buscarAvanzadoService;
+
     }
 
     @PostMapping
     public ResponseEntity<PersonaDTO> registrarPersona(@Valid @RequestBody PersonaDTO personaDTO) {
-        PersonaDTO nuevaPersona = registrarService.registrar(personaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaPersona);
+        PersonaDTO personaCreada = guardarServiceApp.guardarPersonaApp(personaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personaCreada);
     }
 
     @GetMapping
     public ResponseEntity<List<PersonaDTO>> listarPersonas() {
-        List<PersonaDTO> personas = listarService.listarPersonas();
+        List<PersonaDTO> personas = listarService.listar();
         return ResponseEntity.ok(personas);
     }
 
@@ -71,7 +75,7 @@ public class PersonaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonaDTO> buscarPorId(@PathVariable Long id) {
-        PersonaDTO persona = buscarService.buscarPorId(id);
+        PersonaDTO persona = buscarService.buscar(id);
         return ResponseEntity.ok(persona);
     }
 

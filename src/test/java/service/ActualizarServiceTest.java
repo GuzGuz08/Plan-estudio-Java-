@@ -1,10 +1,9 @@
 package service;
 
-import application.dto.PersonaDTO;
 import application.port.out.PersonaRepositoryPort;
-import application.service.ConvertirService;
 import application.service.SanitizacionService;
 import application.service.ValidarEmailService;
+import domain.exception.EmailDuplicadoException;
 import domain.exception.PersonaNoEncontradaException;
 import domain.model.Persona;
 import domain.service.ActualizarService;
@@ -17,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -33,9 +33,6 @@ class ActualizarServiceTest {
     ValidarEmailService validarEmailService;
 
     @Mock
-    ConvertirService convertirService;
-
-    @Mock
     SanitizacionService sanitizacionService;
 
     private ActualizarService actualizarService;
@@ -44,29 +41,31 @@ class ActualizarServiceTest {
 
     @BeforeEach
     void setUp() {
-        actualizarService = new ActualizarService(personaRepository, buscarService, validarEmailService, convertirService, sanitizacionService);
+        actualizarService = new ActualizarService(personaRepository, buscarService, validarEmailService, sanitizacionService);
     }
 
     @Test
     void should_UpdatePersona_When_ValidData() {
         Long id = 1L;
-        PersonaDTO dtoActualizado = new PersonaDTO(null, "Carlos", "García", "carlos@test.com", FECHA_NACIMIENTO);
-
         Persona personaExistente = new Persona("Juan", "Pérez", "juan@test.com", FECHA_NACIMIENTO);
         personaExistente.setId(id);
 
-        Persona personaActualizada = new Persona("Carlos", "García", "carlos@test.com", FECHA_NACIMIENTO);
+        Persona personaActualizada = new Persona("Carlos", "García", "carlos@test.com", LocalDate.of(1991, 3, 20));
         personaActualizada.setId(id);
 
         when(buscarService.buscarPersonaOFallar(id)).thenReturn(personaExistente);
         when(personaRepository.save(personaExistente)).thenReturn(personaActualizada);
-        when(convertirService.convertirADTO(personaActualizada)).thenReturn(new PersonaDTO(id, "Carlos", "García", "carlos@test.com", FECHA_NACIMIENTO));
 
-        PersonaDTO resultado = actualizarService.actualizar(id, dtoActualizado);
+        Persona dtoActualizar = new Persona("Carlos", "García", "carlos@test.com", LocalDate.of(1991, 3, 20));
+        dtoActualizar.id = id;
+
+        Persona resultado = actualizarService.actualizar(dtoActualizar);
 
         assertNotNull(resultado);
-        assertEquals(id, resultado.id);
-        assertEquals("Carlos", resultado.nombre);
+        assertEquals(id, resultado.getId());
+        assertEquals("Carlos", resultado.getNombre());
+        assertEquals("García", resultado.getApellido());
+        assertEquals("carlos@test.com", resultado.getEmail());
         verify(validarEmailService).validarEmailUnico("carlos@test.com", id);
         verify(buscarService).buscarPersonaOFallar(id);
     }
@@ -74,13 +73,14 @@ class ActualizarServiceTest {
     @Test
     void should_ThrowException_When_PersonaNotFound() {
         Long id = 999L;
-        PersonaDTO dto = new PersonaDTO(null, "Carlos", "García", "carlos@test.com", FECHA_NACIMIENTO);
+        Persona persona = new Persona("Carlos", "García", "carlos@test.com", FECHA_NACIMIENTO);
+        persona.id = id;
 
         when(buscarService.buscarPersonaOFallar(id)).thenThrow(
                 new PersonaNoEncontradaException(id));
 
         assertThrows(PersonaNoEncontradaException.class,
-                () -> actualizarService.actualizar(id, dto));
+                () -> actualizarService.actualizar(persona));
 
         verify(validarEmailService, never()).validarEmailUnico(anyString(), anyLong());
     }
@@ -88,16 +88,17 @@ class ActualizarServiceTest {
     @Test
     void should_ThrowException_When_EmailAlreadyInUse() {
         Long id = 1L;
-        PersonaDTO dto = new PersonaDTO(null, "Carlos", "García", "duplicado@test.com", FECHA_NACIMIENTO);
-
         Persona personaExistente = new Persona("Juan", "Pérez", "juan@test.com", FECHA_NACIMIENTO);
         personaExistente.setId(id);
 
+        Persona personaActualizar = new Persona("Carlos", "García", "duplicado@test.com", FECHA_NACIMIENTO);
+        personaActualizar.id = id;
+
         when(buscarService.buscarPersonaOFallar(id)).thenReturn(personaExistente);
-        doThrow(new domain.exception.EmailDuplicadoException("duplicado@test.com"))
+        doThrow(new EmailDuplicadoException("duplicado@test.com"))
                 .when(validarEmailService).validarEmailUnico("duplicado@test.com", id);
 
-        assertThrows(domain.exception.EmailDuplicadoException.class,
-                () -> actualizarService.actualizar(id, dto));
+        assertThrows(EmailDuplicadoException.class,
+                () -> actualizarService.actualizar(personaActualizar));
     }
 }
