@@ -3,5 +3,5 @@ import domain.model.Persona;
 
 
 public interface IActualizarService {
-    Persona actualizar(Persona persona);
+    Persona actualizar(Long id,Persona persona);
 }

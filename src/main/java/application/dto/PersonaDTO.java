@@ -1,5 +1,4 @@
 package application.dto;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +8,8 @@ import java.time.LocalDate;
 import domain.model.Persona;
 
 public class PersonaDTO {
+
+    public PersonaDTO() {}
 
     public Long id;
 
@@ -29,11 +30,15 @@ public class PersonaDTO {
     @Past(message = "La fecha de nacimiento no puede ser futura")
     public LocalDate fechaNacimiento;
     
-    public PersonaDTO() {
-    }
-
     public PersonaDTO(Long id, String nombre, String apellido, String email, LocalDate fechaNacimiento) {
         this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public PersonaDTO(String nombre, String apellido, String email, LocalDate fechaNacimiento) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
@@ -58,6 +63,4 @@ public class PersonaDTO {
                 persona.fechaNacimiento
         );
     }
-
-
 }

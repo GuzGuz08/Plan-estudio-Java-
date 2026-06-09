@@ -1,6 +1,5 @@
 package service;
 
-import application.port.out.PersonaRepositoryPort;
 import domain.model.Persona;
 import domain.service.ListarService;
 
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import domain.repositoryPort.PersonaRepositoryPort;
 
 import java.time.LocalDate;
 import java.util.List;

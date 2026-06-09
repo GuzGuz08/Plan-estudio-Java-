@@ -1,8 +1,10 @@
 package domain.service;
 import domain.model.Persona;
+
 import java.util.List;
 import org.springframework.stereotype.Service;
-import application.port.out.PersonaRepositoryPort;
+
+import domain.repositoryPort.PersonaRepositoryPort;
 import domain.interfaces.IListarService;
 
 @Service

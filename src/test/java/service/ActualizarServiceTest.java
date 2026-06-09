@@ -1,13 +1,13 @@
 package service;
 
-import application.port.out.PersonaRepositoryPort;
-import application.service.SanitizacionService;
-import application.service.ValidarEmailService;
+import domain.repositoryPort.PersonaRepositoryPort;
 import domain.exception.EmailDuplicadoException;
 import domain.exception.PersonaNoEncontradaException;
 import domain.model.Persona;
 import domain.service.ActualizarService;
 import domain.service.BuscarService;
+import domain.service.SanitizacionService;
+import domain.service.ValidarEmailService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class ActualizarServiceTest {
         Persona dtoActualizar = new Persona("Carlos", "García", "carlos@test.com", LocalDate.of(1991, 3, 20));
         dtoActualizar.id = id;
 
-        Persona resultado = actualizarService.actualizar(dtoActualizar);
+        Persona resultado = actualizarService.actualizar(id,dtoActualizar);
 
         assertNotNull(resultado);
         assertEquals(id, resultado.getId());
@@ -80,7 +80,7 @@ class ActualizarServiceTest {
                 new PersonaNoEncontradaException(id));
 
         assertThrows(PersonaNoEncontradaException.class,
-                () -> actualizarService.actualizar(persona));
+                () -> actualizarService.actualizar(id,persona));
 
         verify(validarEmailService, never()).validarEmailUnico(anyString(), anyLong());
     }
@@ -99,6 +99,6 @@ class ActualizarServiceTest {
                 .when(validarEmailService).validarEmailUnico("duplicado@test.com", id);
 
         assertThrows(EmailDuplicadoException.class,
-                () -> actualizarService.actualizar(personaActualizar));
+                () -> actualizarService.actualizar(id,personaActualizar));
     }
 }

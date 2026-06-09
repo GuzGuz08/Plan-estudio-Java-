@@ -1,4 +1,4 @@
-package application.port.out;
+package domain.repositoryPort;
 
 import domain.model.Persona;
 import java.time.LocalDate;

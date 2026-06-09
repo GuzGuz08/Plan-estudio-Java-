@@ -14,16 +14,9 @@ public class ActualizarServiceApp implements IActualizarServiceApp {
     }
 
     @Override
-    public PersonaDTO actualizarApp(PersonaDTO personaDTO){
-        Persona personaModel = personaDTO.aModelo();
-        personaModel.id = personaDTO.id;
-        Persona personaActualizada = actualizarService.actualizar(personaModel);
-        return PersonaDTO.desdeModelo(personaActualizada);
-    }
-
-    @Override
     public PersonaDTO actualizar(Long id, PersonaDTO personaDTO){
-        personaDTO.id = id;
-        return actualizarApp(personaDTO);
+        Persona personaModel = personaDTO.aModelo();
+        Persona personaActualizada = actualizarService.actualizar(id,personaModel);
+        return PersonaDTO.desdeModelo(personaActualizada);
     }
 }

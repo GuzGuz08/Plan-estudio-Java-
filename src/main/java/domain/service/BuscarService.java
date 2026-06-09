@@ -1,11 +1,11 @@
 package domain.service;
-import application.port.out.PersonaRepositoryPort;
 import domain.exception.PersonaNoEncontradaException;
 import domain.interfaces.IBuscarService;
 import domain.model.Persona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import domain.repositoryPort.PersonaRepositoryPort;
 
 @Service
 public class BuscarService implements IBuscarService {

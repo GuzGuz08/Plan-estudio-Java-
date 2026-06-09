@@ -1,16 +1,17 @@
-package application.service;
-
-import application.dto.PersonaDTO;
+package domain.service;
 import org.springframework.stereotype.Service;
 
-@Service
-public class SanitizacionService {
+import domain.interfaces.ISanitizarService;
+import domain.model.Persona;
 
-    public PersonaDTO sanitizar(PersonaDTO dto) {
-        dto.nombre = sanitizarTexto(dto.nombre);
-        dto.apellido = sanitizarTexto(dto.apellido);
-        dto.email = sanitizarEmail(dto.email);
-        return dto;
+@Service
+public class SanitizacionService implements ISanitizarService {
+
+    public Persona sanitizar(Persona persona) {
+        persona.nombre = sanitizarTexto(persona.nombre);
+        persona.apellido = sanitizarTexto(persona.apellido);
+        persona.email = sanitizarEmail(persona.email);
+        return persona;
     }
     
     public String sanitizarTexto(String valor) {

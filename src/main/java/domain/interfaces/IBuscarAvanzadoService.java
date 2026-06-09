@@ -1,8 +1,8 @@
 package domain.interfaces;
 
-import application.dto.PersonaPageDTO;
+import domain.model.PersonaPage;
 
 public interface IBuscarAvanzadoService {
-    PersonaPageDTO buscar(String nombre, String apellido, Integer edadMin, Integer edadMax,
+    PersonaPage buscar(String nombre, String apellido, Integer edadMin, Integer edadMax,
                           int page, int size, String sort);
 }

@@ -1,7 +1,7 @@
 package service;
 
-import application.dto.PersonaDTO;
-import application.service.SanitizacionService;
+import domain.model.Persona;
+import domain.service.SanitizacionService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,21 +57,20 @@ class SanitizacionServiceTest {
     }
 
     @Test
-    @DisplayName("Debe sanitizar todos los campos del DTO")
-    void should_SanitizeAllFields_When_DtoHasDangerousContent() {
-        PersonaDTO dto = new PersonaDTO(
-                null,
+    @DisplayName("Debe sanitizar todos los campos del modelo de dominio")
+    void should_SanitizeAllFields_When_PersonaHasDangerousContent() {
+        Persona persona = new Persona(
                 "<b>Juan</b>",
                 "<i>Pérez</i>",
                 "JUAN@TEST.COM",
                 LocalDate.of(1990, 1, 1)
         );
 
-        sanitizacionService.sanitizar(dto);
+        sanitizacionService.sanitizar(persona);
 
-        assertFalse(dto.nombre.contains("<b>"));
-        assertFalse(dto.apellido.contains("<i>"));
-        assertEquals("juan@test.com", dto.email);
+        assertFalse(persona.nombre.contains("<b>"));
+        assertFalse(persona.apellido.contains("<i>"));
+        assertEquals("juan@test.com", persona.email);
     }
 
     @Test

@@ -1,9 +1,10 @@
 package service;
 
-import application.port.out.PersonaRepositoryPort;
-import application.service.ValidarEmailService;
+import domain.repositoryPort.PersonaRepositoryPort;
 import domain.model.Persona;
 import domain.service.GuardarPersonaService;
+import domain.service.SanitizacionService;
+import domain.service.ValidarEmailService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,13 +27,16 @@ class PersonaServiceTest {
     @Mock
     ValidarEmailService validarEmailService;
 
+    private SanitizacionService sanitizacionService;
+
     private GuardarPersonaService guardarService;
 
     private static final LocalDate FECHA_NACIMIENTO = LocalDate.of(1995, 6, 15);
 
     @BeforeEach
     void setUp() {
-        guardarService = new GuardarPersonaService(personaRepository, validarEmailService);
+        sanitizacionService = new SanitizacionService();
+        guardarService = new GuardarPersonaService(personaRepository, validarEmailService, sanitizacionService);
     }
     
 

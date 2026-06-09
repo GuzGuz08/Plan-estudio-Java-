@@ -1,10 +1,12 @@
 package domain.service;
 
-import application.port.out.PersonaRepositoryPort;
 import domain.interfaces.IEliminarService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import domain.repositoryPort.PersonaRepositoryPort;
 
 @Service
 public class EliminarService implements IEliminarService {

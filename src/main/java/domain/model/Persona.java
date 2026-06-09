@@ -1,5 +1,4 @@
 package domain.model;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,7 +11,12 @@ public class Persona {
     public LocalDate fechaNacimiento;
     private LocalDateTime fechaCreacion;
 
-    public Persona() {
+    public Persona(Long id, String nombre, String apellido, String email, LocalDate fechaNacimiento) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.fechaNacimiento = fechaNacimiento;
+        this.id = id;
     }
 
     public Persona(String nombre, String apellido, String email, LocalDate fechaNacimiento) {

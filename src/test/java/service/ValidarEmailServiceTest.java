@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import application.port.out.PersonaRepositoryPort;
-import application.service.ValidarEmailService;
+import domain.repositoryPort.PersonaRepositoryPort;
+import domain.service.ValidarEmailService;
 import domain.exception.EmailDuplicadoException;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,5 @@
 package service;
 
-import application.port.out.PersonaRepositoryPort;
 import domain.exception.PersonaNoEncontradaException;
 import domain.model.Persona;
 import domain.service.BuscarService;
@@ -12,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import domain.repositoryPort.PersonaRepositoryPort;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
