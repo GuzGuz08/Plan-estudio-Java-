@@ -2,7 +2,6 @@ package domain.service;
 import domain.repositoryPort.PersonaRepositoryPort;
 import domain.interfaces.IActualizarService;
 import domain.model.Persona;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

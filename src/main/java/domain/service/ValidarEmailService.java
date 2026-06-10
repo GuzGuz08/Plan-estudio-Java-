@@ -1,11 +1,7 @@
 package domain.service;
-
 import domain.exception.EmailDuplicadoException;
-
 import org.springframework.stereotype.Service;
-
 import domain.repositoryPort.PersonaRepositoryPort;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

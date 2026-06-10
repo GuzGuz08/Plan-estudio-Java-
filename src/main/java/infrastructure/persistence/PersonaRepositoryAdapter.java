@@ -52,7 +52,10 @@ public class PersonaRepositoryAdapter implements PersonaRepositoryPort {
     }
 
     @Override
-    public Page<Persona> search(String nombre, String apellido, LocalDate fechaMin, LocalDate fechaMax, Pageable pageable) {
+    public Page<Persona> search(String nombre, String apellido, Integer edadMin, Integer edadMax, Pageable pageable) {
+        LocalDate fechaMin = (edadMax == null) ? null : LocalDate.now().minusYears(edadMax);
+        LocalDate fechaMax = (edadMin == null) ? null : LocalDate.now().minusYears(edadMin);
+
         Specification<PersonaEntity> spec = buildSearchSpecification(nombre, apellido, fechaMin, fechaMax);
         return jpaRepository.findAll(spec, pageable).map(PersonaEntity::toDomain);
     }

@@ -1,7 +1,6 @@
 package domain.repositoryPort;
 
 import domain.model.Persona;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -19,5 +18,5 @@ public interface PersonaRepositoryPort {
 
     void deleteById(Long id);
 
-    Page<Persona> search(String nombre, String apellido, LocalDate fechaMin, LocalDate fechaMax, Pageable pageable);
+    Page<Persona> search(String nombre, String apellido, Integer edadMin, Integer edadMax, Pageable pageable);
 }
